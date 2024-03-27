@@ -8,9 +8,9 @@ public class PostRepository : IPostRepository
 
     private static readonly ISet<Post> _posts = new HashSet<Post>()
     {
-        new Post(1, "Tytuł 1", "Treść 1"),
-        new Post(2, "Tytuł 2", "Treść 2"),
-        new Post(3, "Tytuł 3", "Treść 3"),
+        new Post(1, "Jak zostać programistą", "Treść 1"),
+        new Post(2, "Ile zarabia programist", "Treść 2"),
+        new Post(3, "Dlateczo warto zostać programistą", "Treść 3"),
 
     };
 
