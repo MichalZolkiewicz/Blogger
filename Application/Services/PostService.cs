@@ -52,4 +52,16 @@ public class PostService : IPostService
         var post = _postRepository.GetById(id);
         _postRepository.Delete(post);
     }
+
+    public IEnumerable<PostDto> SearchInTitle(string title)
+    {
+        var posts = _postRepository.GetAll().Where(post => post.Title.ToLower().Contains(title.ToLower()));
+        
+        if(posts == null)
+        {
+            return new List<PostDto>();
+        }
+
+        return _mapper.Map<IEnumerable<PostDto>>(posts);
+    }
 }
