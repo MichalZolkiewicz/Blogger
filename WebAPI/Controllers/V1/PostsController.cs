@@ -3,9 +3,10 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace WebAPI.Controllers;
+namespace WebAPI.Controllers.V1;
 
-[Route("api/[controller]")]
+[Route("api/{v:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 [ApiController]
 public class PostsController : ControllerBase
 {
@@ -29,7 +30,7 @@ public class PostsController : ControllerBase
     public IActionResult Get(int id)
     {
         var post = _postService.GetPostById(id);
-        if(post == null)
+        if (post == null)
         {
             return NotFound();
         }
@@ -42,7 +43,7 @@ public class PostsController : ControllerBase
     public IActionResult Create(CreatePostDto newPost)
     {
         var post = _postService.AddNewPost(newPost);
-        return Created($"api/posts/{post.Id}", post);   
+        return Created($"api/posts/{post.Id}", post);
     }
 
     [SwaggerOperation(Summary = "Update an existing post")]
@@ -59,5 +60,12 @@ public class PostsController : ControllerBase
     {
         _postService.DeletePost(id);
         return NoContent();
+    }
+
+    [HttpGet("/Search/{title}")]
+    public IActionResult SearchTitle(string title)
+    {
+        var posts = _postService.SearchInTitle(title);
+        return Ok(posts);
     }
 }
