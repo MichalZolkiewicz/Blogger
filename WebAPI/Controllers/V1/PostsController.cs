@@ -62,6 +62,7 @@ public class PostsController : ControllerBase
         return NoContent();
     }
 
+    [SwaggerOperation(Summary = "Search if title contains given string")]
     [HttpGet("/Search/{title}")]
     public IActionResult SearchTitle(string title)
     {

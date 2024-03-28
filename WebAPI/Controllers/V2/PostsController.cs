@@ -67,4 +67,12 @@ public class PostsController : ControllerBase
         _postService.DeletePost(id);
         return NoContent();
     }
+
+    [SwaggerOperation(Summary = "Search if title contains given string")]
+    [HttpGet("/Search/{title}")]
+    public IActionResult SearchTitle(string title)
+    {
+        var posts = _postService.SearchInTitle(title);
+        return Ok(posts);
+    }
 }
