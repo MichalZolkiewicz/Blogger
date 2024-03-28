@@ -1,6 +1,8 @@
 using Application;
 using Infrastructure;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,8 @@ builder.Services.AddApiVersioning(x =>
     x.AssumeDefaultVersionWhenUnspecified = true;
     x.ReportApiVersions = true;
 });
+builder.Services.AddDbContext<BloggerContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BloggerCS")));
 
 var app = builder.Build();  
 
