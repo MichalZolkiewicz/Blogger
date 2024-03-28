@@ -12,7 +12,7 @@ public class BloggerContext : DbContext
 
     public DbSet<Post> Posts { get; set; }
 
-    public override int SaveChanges()
+    public async Task<int> SaveChangesAsync()
     {
         var entries = ChangeTracker
             .Entries()
@@ -28,6 +28,6 @@ public class BloggerContext : DbContext
             }
         }
 
-        return base.SaveChanges();
+        return await base.SaveChangesAsync();
     }
 }
