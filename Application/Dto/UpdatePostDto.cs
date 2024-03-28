@@ -11,6 +11,6 @@ public class UpdatePostDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<CreatePostDto, Post>();
+        profile.CreateMap<UpdatePostDto, Post>();
     }
 }
