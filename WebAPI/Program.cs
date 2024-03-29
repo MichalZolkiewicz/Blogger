@@ -7,6 +7,7 @@ using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
+using Microsoft.AspNetCore.OData.Routing.Conventions;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.Edm;
@@ -43,7 +44,12 @@ builder.Services.AddApiVersioning(x =>
 });
 
 builder.Services.AddControllers().AddOData(
-    options => options.Select().Filter().OrderBy().SetMaxTop(10).AddRouteComponents("odata", GetEdmModel()));
+    options =>
+    {
+        options.Select().Filter().OrderBy().SetMaxTop(10).AddRouteComponents("odata", GetEdmModel());
+        options.Conventions.Remove(options.Conventions.OfType<MetadataRoutingConvention>().First());
+    });
+               
 
 builder.Services.AddOdataSwaggerSupport();
 
