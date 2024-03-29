@@ -16,10 +16,22 @@ public class PostService : IPostService
         _postRepository = postRepository;
         _mapper = mapper;
     }
-    public async Task<IEnumerable<PostDto>> GetAllPostsAsync()
+
+    public IQueryable<PostDto> GetAllPosts()
     {
-        var posts = await _postRepository.GetAllAsync();
+        var posts = _postRepository.GetAll();
+        return _mapper.ProjectTo<PostDto>(posts);
+    }
+
+    public async Task<IEnumerable<PostDto>> GetAllPostsAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
+    {
+        var posts = await _postRepository.GetAllAsync(pageNumber, pageSize, sortField, ascending, filterBy);
         return _mapper.Map<IEnumerable<PostDto>>(posts);
+    }
+
+    public async Task<int> GetAllPostsCountAsync(string filterBy)
+    {
+        return await _postRepository.GetAllCountAsync(filterBy);
     }
 
     public async Task<PostDto> GetPostByIdAsync(int id)
