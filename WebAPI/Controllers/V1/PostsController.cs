@@ -1,11 +1,14 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Swashbuckle.AspNetCore.Annotations;
+using WebAPI.Filters;
+using WebAPI.Filters.Helpers;
+using WebAPI.Wrapper;
 
 namespace WebAPI.Controllers.V1;
 
-[ApiExplorerSettings(IgnoreApi = true)]
 [Route("api/{v:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 [ApiController]
@@ -18,12 +21,34 @@ public class PostsController : ControllerBase
         _postService = postService;
     }
 
-    [SwaggerOperation(Summary = "Retrieves all posts")]
-    [HttpGet]
-    public async Task<IActionResult> Get()
+    [SwaggerOperation(Summary = "Retireves sort fields")]
+    [HttpGet("[action]")]
+    public IActionResult GetSortFields()
     {
-        var posts = await _postService.GetAllPostsAsync();
-        return Ok(posts);
+        return Ok(SortingHelper.GetSortFields().Select(x => x.Key));
+    }
+
+    [SwaggerOperation(Summary = "Retrieves paged posts")]
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
+    {
+        var validPaginationFiler = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+        var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
+
+        var posts = await _postService.GetAllPostsAsync(validPaginationFiler.PageNumber, validPaginationFiler.PageSize,
+                                                        validSortingFilter.SortField, validSortingFilter.Ascending,
+                                                        filterBy);
+        var totalRecords = await _postService.GetAllPostsCountAsync(filterBy);
+
+        return Ok(PaginationHelper.CreatePageResponse(posts, validPaginationFiler, totalRecords));
+    }
+
+    [SwaggerOperation(Summary = "Retrieves all posts")]
+    [EnableQuery]
+    [HttpGet("[action]")]
+    public IQueryable<PostDto> GetAll()
+    {
+        return _postService.GetAllPosts();
     }
 
     [SwaggerOperation(Summary = "Retrieves a specific post by unique id")]
@@ -36,7 +61,7 @@ public class PostsController : ControllerBase
             return NotFound();
         }
 
-        return Ok(post);
+        return Ok(new Response<PostDto>(post));
     }
 
     [SwaggerOperation(Summary = "Create a new post")]
@@ -44,7 +69,7 @@ public class PostsController : ControllerBase
     public async Task<IActionResult> Create(CreatePostDto newPost)
     {
         var post = await _postService.AddNewPostAsync(newPost);
-        return Created($"api/posts/{post.Id}", post);
+        return Created($"api/posts/{post.Id}", new Response<PostDto>(post));
     }
 
     [SwaggerOperation(Summary = "Update an existing post")]
