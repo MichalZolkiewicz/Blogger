@@ -5,15 +5,18 @@ using Cosmonaut.Extensions.Microsoft.DependencyInjection;
 using Domain.Entities.Cosmos;
 using Infrastructure;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
 using OData.Swagger.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +44,22 @@ builder.Services.AddApiVersioning(x =>
     x.DefaultApiVersion = new ApiVersion(1, 0);
     x.AssumeDefaultVersionWhenUnspecified = true;
     x.ReportApiVersions = true;
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(option =>
+{
+    option.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+    };
 });
 
 builder.Services.AddControllers().AddOData(
