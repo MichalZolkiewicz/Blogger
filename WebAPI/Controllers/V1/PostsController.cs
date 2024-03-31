@@ -1,5 +1,6 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Swashbuckle.AspNetCore.Annotations;
@@ -11,6 +12,7 @@ namespace WebAPI.Controllers.V1;
 
 [Route("api/{v:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
+[Authorize(AuthenticationSchemes = "Bearer")]
 [ApiController]
 public class PostsController : ControllerBase
 {

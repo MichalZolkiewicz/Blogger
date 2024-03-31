@@ -36,6 +36,26 @@ builder.Services.AddSwaggerGen(c =>
     c.EnableAnnotations();
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "JWT Authentication",
+        Description = "Enter JWT Bearer toekn",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+    c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {securityScheme, new string[] { }}
+    });
 });
 
 
@@ -64,17 +84,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<BloggerContext>()
-    .AddDefaultTokenProviders();
-
 builder.Services.AddControllers().AddOData(
     options =>
     {
         options.Select().Filter().OrderBy().SetMaxTop(10).AddRouteComponents("odata", GetEdmModel());
         options.Conventions.Remove(options.Conventions.OfType<MetadataRoutingConvention>().First());
     });
-               
 
 builder.Services.AddOdataSwaggerSupport();
 
@@ -89,6 +104,7 @@ var cosmosStoreSettings = new CosmosStoreSettings(
     new ConnectionPolicy { ConnectionMode = ConnectionMode.Direct, ConnectionProtocol = Protocol.Tcp }
     );
 builder.Services.AddCosmosStore<CosmosPost>(cosmosStoreSettings);
+
 var app = builder.Build();  
 
 // Configure the HTTP request pipeline.
