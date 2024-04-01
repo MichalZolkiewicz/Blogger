@@ -1,6 +1,8 @@
 using Application;
 using Application.Dto;
+using Application.Interfaces;
 using Application.Services;
+using Application.Services.Emails;
 using Cosmonaut;
 using Cosmonaut.Extensions.Microsoft.DependencyInjection;
 using Domain.Entities.Cosmos;
@@ -17,6 +19,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
 using OData.Swagger.Services;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +60,19 @@ builder.Services.AddSwaggerGen(c =>
         {securityScheme, new string[] { }}
     });
 });
+
+builder.Services
+    .AddFluentEmail(builder.Configuration["FluentEmail:FromEmail"], builder.Configuration["FluentEmail:FromName"])
+    .AddRazorRenderer()
+    .AddSmtpSender(() => new SmtpClient(builder.Configuration["FluentEmail:SmtpSender:Host"], int.Parse(builder.Configuration["FluentEmail:SmtpSender:Port"]))
+    {
+        EnableSsl = true,
+        UseDefaultCredentials = false,
+        Credentials = new NetworkCredential(builder.Configuration["FluentEmail:SmtpSender:Username"], builder.Configuration["FluentEmail:SmtpSender:Password"])
+    });
+                    
+
+builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
 
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();

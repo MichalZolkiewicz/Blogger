@@ -1,4 +1,6 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Interfaces;
+using Domain.Enums;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,12 +19,14 @@ public class IdentityController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IEmailSenderService _emailSender;
 
-    public IdentityController(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
+    public IdentityController(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager, IEmailSenderService emailSender)
     {
         _userManager = userManager;
         _configuration = configuration;
         _roleManager = roleManager;
+        _emailSender = emailSender;
     }
 
     [HttpPost]
@@ -61,6 +65,8 @@ public class IdentityController : ControllerBase
             await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
         await _userManager.AddToRoleAsync(user, UserRoles.User);
+
+        await _emailSender.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
 
         return Ok(new Response<bool> { Succeeded = true, Message = "User created successfuly!" });
     }
