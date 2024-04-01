@@ -1,11 +1,12 @@
 using Application;
 using Application.Dto;
+using Application.Services;
 using Cosmonaut;
 using Cosmonaut.Extensions.Microsoft.DependencyInjection;
 using Domain.Entities.Cosmos;
 using Infrastructure;
 using Infrastructure.Data;
-unusing Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
@@ -64,6 +65,8 @@ builder.Services.AddApiVersioning(x =>
     x.AssumeDefaultVersionWhenUnspecified = true;
     x.ReportApiVersions = true;
 });
+
+builder.Services.AddTransient<UserResolverService>();
 
 builder.Services.AddAuthentication(options =>
 {
