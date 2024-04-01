@@ -5,9 +5,7 @@ using Cosmonaut.Extensions.Microsoft.DependencyInjection;
 using Domain.Entities.Cosmos;
 using Infrastructure;
 using Infrastructure.Data;
-using Infrastructure.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+unusing Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
@@ -57,7 +55,6 @@ builder.Services.AddSwaggerGen(c =>
         {securityScheme, new string[] { }}
     });
 });
-
 
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
