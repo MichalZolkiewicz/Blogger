@@ -1,8 +1,7 @@
 ﻿using Application.Mappings;
 using AutoMapper;
-using Domain.Entities;
 
-namespace Application.Dto;
+namespace Application.Dto.Post;
 
 public class UpdatePostDto : IMap
 {
@@ -11,6 +10,6 @@ public class UpdatePostDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<UpdatePostDto, Post>();
+        profile.CreateMap<UpdatePostDto, Domain.Entities.Post>();
     }
 }

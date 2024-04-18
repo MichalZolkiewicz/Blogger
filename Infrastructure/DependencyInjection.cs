@@ -13,6 +13,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<ICosmosPostRepository, CosmosPostRepository>();
+        services.AddScoped<IPictureRepository, PictureRepository>();
 
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<BloggerContext>()

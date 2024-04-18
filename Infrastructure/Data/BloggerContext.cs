@@ -17,6 +17,7 @@ public class BloggerContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<Post> Posts { get; set; }
+    public DbSet<Picture> Pictures { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {
