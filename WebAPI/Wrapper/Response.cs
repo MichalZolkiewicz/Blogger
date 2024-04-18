@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Wrapper;
 
-public class Response<T>
+public class Response<T> : Response
 {
 
     public T Data { get; set; }
@@ -16,5 +16,22 @@ public class Response<T>
     {
         Data = data;
         Succeeded = true;
+    }
+}
+
+public class Response
+{
+    public bool Succeeded { get; set; }
+    public string Message { get; set; }
+
+    public Response()
+    {
+        
+    }
+
+    public Response(bool succeded, string message)
+    {
+        Succeeded = succeded;
+        Message = message;
     }
 }
