@@ -1,4 +1,4 @@
-﻿using Application.Dto;
+﻿using Application.Dto.Post;
 using Application.Interfaces;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -86,7 +86,7 @@ public class PostsController : ControllerBase
         var userOwnsPost = await _postService.UserOwnsPostAsync(updatePost.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if(!userOwnsPost)
         {
-            return BadRequest(new Response<bool>() { Succeeded = false, Message = "You do not own this post!" });
+            return BadRequest(new Response(false, "You do not own this post!"));
         }
 
         await _postService.UpdatePostAsync(updatePost);
@@ -102,7 +102,7 @@ public class PostsController : ControllerBase
         var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
         if (!isAdmin && !userOwnsPost)
         {
-            return BadRequest(new Response<bool>() { Succeeded = false, Message = "You do not own this post!" });
+            return BadRequest(new Response(false, "You do not own this post!"));
         }
 
         await _postService.DeletePostAsync(id);
