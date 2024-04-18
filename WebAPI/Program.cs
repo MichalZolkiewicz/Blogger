@@ -1,5 +1,5 @@
 using Application;
-using Application.Dto;
+using Application.Dto.Post;
 using Application.Interfaces;
 using Application.Services;
 using Application.Services.Emails;
@@ -22,6 +22,7 @@ using OData.Swagger.Services;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
     var securityScheme = new OpenApiSecurityScheme
     {
         Name = "JWT Authentication",
-        Description = "Enter JWT Bearer toekn",
+        Description = "Enter JWT Bearer token",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
@@ -122,6 +123,8 @@ var cosmosStoreSettings = new CosmosStoreSettings(
     );
 builder.Services.AddCosmosStore<CosmosPost>(cosmosStoreSettings);
 
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
 var app = builder.Build();  
 
 // Configure the HTTP request pipeline.
@@ -131,7 +134,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
