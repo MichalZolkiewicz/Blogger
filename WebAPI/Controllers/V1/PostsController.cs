@@ -1,4 +1,4 @@
-﻿using Application.Dto.Post;
+﻿using Application.Dto.Posts;
 using Application.Interfaces;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;

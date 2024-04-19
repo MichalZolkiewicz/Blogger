@@ -1,7 +1,8 @@
 ﻿using Application.Mappings;
 using AutoMapper;
+using Domain.Entities;
 
-namespace Application.Dto.Post;
+namespace Application.Dto.Posts;
 
 public class PostDto : IMap
 {
@@ -12,7 +13,7 @@ public class PostDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Domain.Entities.Post, PostDto>()
+        profile.CreateMap<Post, PostDto>()
             .ForMember(x => x.CreationDate, y => y.MapFrom(z => z.Created));
     }
 }

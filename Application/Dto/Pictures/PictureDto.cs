@@ -1,7 +1,8 @@
 ﻿using Application.Mappings;
 using AutoMapper;
+using Domain.Entities;
 
-namespace Application.Dto.Picture;
+namespace Application.Dto.Pictures;
 
 public class PictureDto : IMap
 {
@@ -13,6 +14,6 @@ public class PictureDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Domain.Entities.Picture, PictureDto>();
+        profile.CreateMap<Picture, PictureDto>();
     }
 }

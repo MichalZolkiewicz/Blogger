@@ -1,4 +1,4 @@
-﻿using Application.Dto.Picture;
+﻿using Application.Dto.Pictures;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Interfaces;

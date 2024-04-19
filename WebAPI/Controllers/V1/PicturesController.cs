@@ -1,4 +1,4 @@
-﻿using Application.Dto.Picture;
+﻿using Application.Dto.Pictures;
 using Application.Interfaces;
 using Application.Services;
 using Infrastructure.Identity;
@@ -27,8 +27,7 @@ public class PicturesController : ControllerBase
 
     [SwaggerOperation(Summary = "Retrieves a pictures by unique post id")]
     [HttpGet("[action]/{postId}")]
-
-    public async Task<IActionResult> GetByPostId(int postId)
+    public async Task<IActionResult> GetByPostIdAsync(int postId)
     {
         var pictures = await _pictureService.GetPicturesByPostIdAsync(postId);
         return Ok(new Response<IEnumerable<PictureDto>>(pictures));

@@ -1,4 +1,4 @@
-﻿using Application.Dto.Post;
+﻿using Application.Dto.Posts;
 using Domain.Entities;
 
 namespace Application.Interfaces;
