@@ -57,5 +57,6 @@ public class AttachmentService : IAttachmentService
     {
         var attachment = await _attachmentRepository.GetByIdAsync(id);
         await _attachmentRepository.DeleteAsync(attachment);
+        File.Delete(attachment.Path);
     }
 }
