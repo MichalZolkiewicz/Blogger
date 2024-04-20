@@ -3,9 +3,11 @@ using Application.Dto.Posts;
 using Application.Interfaces;
 using Application.Services;
 using Application.Services.Emails;
+using Application.Validators;
 using Cosmonaut;
 using Cosmonaut.Extensions.Microsoft.DependencyInjection;
 using Domain.Entities.Cosmos;
+using FluentValidation.AspNetCore;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,6 +31,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers()
+    .AddFluentValidation(options =>
+    {
+        options.RegisterValidatorsFromAssemblyContaining<CreatePostDtoValidator>();
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.WriteIndented = true;

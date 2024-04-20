@@ -42,10 +42,10 @@ public class PostService : IPostService
 
     public async Task<PostDto> AddNewPostAsync(CreatePostDto newPost, string userId)
     {
-        if(string.IsNullOrEmpty(newPost.Title))
-        {
-            throw new Exception("Post can not have an empty title.");
-        }
+        //if(string.IsNullOrEmpty(newPost.Title))
+        //{
+        //    throw new Exception("Post can not have an empty title.");
+        //}
 
         var post = _mapper.Map<Post>(newPost);
         post.UserId = userId;

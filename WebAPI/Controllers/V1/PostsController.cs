@@ -1,11 +1,13 @@
 ﻿using Application.Dto.Posts;
 using Application.Interfaces;
+using Application.Validators;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
+using WebAPI.Attributes;
 using WebAPI.Filters;
 using WebAPI.Filters.Helpers;
 using WebAPI.Wrapper;
@@ -69,6 +71,7 @@ public class PostsController : ControllerBase
         return Ok(new Response<PostDto>(post));
     }
 
+    [ValidateFilter]
     [SwaggerOperation(Summary = "Create a new post")]
     [Authorize(Roles = UserRoles.User)]
     [HttpPost]
