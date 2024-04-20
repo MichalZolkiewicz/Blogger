@@ -21,8 +21,10 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
 using OData.Swagger.Services;
+using Swashbuckle.AspNetCore.Filters;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Text;
 using WebAPI.Middlewares;
 
@@ -38,13 +40,16 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.WriteIndented = true;
-    });
+    })
+    .AddXmlSerializerFormatters();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.EnableAnnotations();
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+    c.ExampleFilters();
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
     var securityScheme = new OpenApiSecurityScheme
@@ -66,6 +71,10 @@ builder.Services.AddSwaggerGen(c =>
     {
         {securityScheme, new string[] { }}
     });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
 });
 
 builder.Services
@@ -116,6 +125,7 @@ builder.Services.AddControllers().AddOData(
     });
 
 builder.Services.AddOdataSwaggerSupport();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 
 builder.Services.AddDbContext<BloggerContext>(options =>

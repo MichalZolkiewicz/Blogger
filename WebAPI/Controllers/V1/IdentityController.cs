@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebAPI.Models;
+using WebAPI.SwaggerExamples.Responses;
 using WebAPI.Wrapper;
 
 namespace WebAPI.Controllers.V1;
@@ -29,6 +30,13 @@ public class IdentityController : ControllerBase
         _emailSender = emailSender;
     }
 
+    /// <summary>
+    /// Register the user in the system
+    /// </summary>
+    /// <response code="200">User created successfully!</response>
+    /// <response code="500">User already exists!</response>
+    [ProducesResponseType(typeof(RegisterResponseStatus200), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RegisterResponseStatus500), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     [Route("Register")]
     public async Task<IActionResult> Register(RegisterModel registerModel)
@@ -36,7 +44,7 @@ public class IdentityController : ControllerBase
         var userExists = await _userManager.FindByNameAsync(registerModel.UserName);
         if (userExists != null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response
             {
                 Succeeded = false,
                 Message = "User already exists!"
@@ -68,9 +76,12 @@ public class IdentityController : ControllerBase
 
         await _emailSender.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
 
-        return Ok(new Response<bool> { Succeeded = true, Message = "User created successfuly!" });
+        return Ok(new Response { Succeeded = true, Message = "User created successfuly!" });
     }
 
+    /// <summary>
+    /// Register the admin in the system
+    /// </summary>
     [HttpPost]
     [Route("RegisterAdmin")]
     public async Task<IActionResult> RegisterAdmin(RegisterModel registerModel)
@@ -111,6 +122,9 @@ public class IdentityController : ControllerBase
         return Ok(new Response<bool> { Succeeded = true, Message = "User created successfuly!" });
     }
 
+    /// <summary>
+    /// Register the superuser in the system
+    /// </summary>
     [HttpPost]
     [Route("RegisterSuperUser")]
     public async Task<IActionResult> RegisterSuperUser(RegisterModel registerModel)
@@ -151,6 +165,9 @@ public class IdentityController : ControllerBase
         return Ok(new Response<bool> { Succeeded = true, Message = "User created successfuly!" });
     }
 
+    /// <summary>
+    /// Logs the user into system
+    /// </summary>
     [HttpPost]
     [Route("Login")]
     public async Task<IActionResult> Login(LoginModel login)
