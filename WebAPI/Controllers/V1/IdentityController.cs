@@ -39,7 +39,7 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(RegisterResponseStatus500), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     [Route("Register")]
-    public async Task<IActionResult> Register(RegisterModel registerModel)
+    public async Task<IActionResult> RegisterAsync(RegisterModel registerModel)
     {
         var userExists = await _userManager.FindByNameAsync(registerModel.UserName);
         if (userExists != null)
@@ -84,7 +84,7 @@ public class IdentityController : ControllerBase
     /// </summary>
     [HttpPost]
     [Route("RegisterAdmin")]
-    public async Task<IActionResult> RegisterAdmin(RegisterModel registerModel)
+    public async Task<IActionResult> RegisterAdminAsync(RegisterModel registerModel)
     {
         var userExists = await _userManager.FindByNameAsync(registerModel.UserName);
         if (userExists != null)
@@ -127,7 +127,7 @@ public class IdentityController : ControllerBase
     /// </summary>
     [HttpPost]
     [Route("RegisterSuperUser")]
-    public async Task<IActionResult> RegisterSuperUser(RegisterModel registerModel)
+    public async Task<IActionResult> RegisterSuperUserAsync(RegisterModel registerModel)
     {
         var userExists = await _userManager.FindByNameAsync(registerModel.UserName);
         if(userExists != null)
@@ -170,7 +170,7 @@ public class IdentityController : ControllerBase
     /// </summary>
     [HttpPost]
     [Route("Login")]
-    public async Task<IActionResult> Login(LoginModel login)
+    public async Task<IActionResult> LoginAsync(LoginModel login)
     {
         var user = await _userManager.FindByNameAsync(login.UserName);
         if(user != null && await _userManager.CheckPasswordAsync(user, login.Password)) 
@@ -195,10 +195,10 @@ public class IdentityController : ControllerBase
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
-            return Ok(new
+            return Ok(new AuthSuccessResponse()
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo
             });
         }
         return Unauthorized();
