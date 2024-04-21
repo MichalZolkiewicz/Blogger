@@ -8,9 +8,11 @@ using Cosmonaut;
 using Cosmonaut.Extensions.Microsoft.DependencyInjection;
 using Domain.Entities.Cosmos;
 using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
@@ -20,12 +22,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using OData.Swagger.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Text;
+using WebAPI.HealthChecks;
 using WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -140,6 +144,12 @@ var cosmosStoreSettings = new CosmosStoreSettings(
 builder.Services.AddCosmosStore<CosmosPost>(cosmosStoreSettings);
 
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<BloggerContext>("Database");
+builder.Services.AddHealthChecksUI()
+    .AddInMemoryStorage();
+builder.Services.AddHealthChecks()
+    .AddCheck<ResponseTimeHealthCheck>("Network speed test");
 
 var app = builder.Build();  
 
@@ -154,6 +164,12 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHealthChecks("/health", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecksUI();
 
 
 static IEdmModel GetEdmModel()
