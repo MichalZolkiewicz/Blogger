@@ -23,6 +23,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using NLog.Web;
 using OData.Swagger.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net;
@@ -150,6 +151,7 @@ builder.Services.AddHealthChecksUI()
     .AddInMemoryStorage();
 builder.Services.AddHealthChecks()
     .AddCheck<ResponseTimeHealthCheck>("Network speed test");
+builder.Host.UseNLog();
 
 var app = builder.Build();  
 
