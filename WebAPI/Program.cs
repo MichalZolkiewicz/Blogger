@@ -131,7 +131,7 @@ builder.Services.AddControllers().AddOData(
 
 builder.Services.AddOdataSwaggerSupport();
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
-
+builder.Services.AddMemoryCache();
 
 builder.Services.AddDbContext<BloggerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BloggerCS")));
