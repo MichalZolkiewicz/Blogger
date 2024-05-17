@@ -40,5 +40,3 @@ await bloggerApi.UpdatePostAsync(new UpdatePostDto
 });
 
 await bloggerApi.DeletePostAsync(retrievedPost.Content.Data.Id);
-
-var moj = "string";
