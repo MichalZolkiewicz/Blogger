@@ -30,6 +30,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Text;
+using WebAPI.Cache;
 using WebAPI.HealthChecks;
 using WebAPI.Middlewares;
 
@@ -92,9 +93,6 @@ builder.Services
         Credentials = new NetworkCredential(builder.Configuration["FluentEmail:SmtpSender:Username"], builder.Configuration["FluentEmail:SmtpSender:Password"])
     });
                     
-
-builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
-
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddApiVersioning(x =>
@@ -103,8 +101,6 @@ builder.Services.AddApiVersioning(x =>
     x.AssumeDefaultVersionWhenUnspecified = true;
     x.ReportApiVersions = true;
 });
-
-builder.Services.AddTransient<UserResolverService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -121,6 +117,19 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
 });
+
+var redisCacheSettings = new RedisCacheSettings();
+builder.Configuration.GetSection(nameof(RedisCacheSettings)).Bind(redisCacheSettings);
+builder.Services.AddSingleton(redisCacheSettings);
+
+if(!redisCacheSettings.Enabled)
+{
+    return;
+}
+
+builder.Services.AddStackExchangeRedisCache(options => options.Configuration = redisCacheSettings.ConnectionString);
+builder.Services.AddSingleton<IResponseCacheService, ResponseCacheService>();
+
 
 builder.Services.AddControllers().AddOData(
     options =>
