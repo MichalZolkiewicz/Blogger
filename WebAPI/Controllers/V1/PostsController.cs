@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using WebAPI.Attributes;
+using WebAPI.Cache;
 using WebAPI.Filters;
 using WebAPI.Filters.Helpers;
 using WebAPI.Wrapper;
@@ -41,6 +42,7 @@ public class PostsController : ControllerBase
 
     [SwaggerOperation(Summary = "Retrieves paged posts")]
     [HttpGet]
+    [Cached(600)]
     public async Task<IActionResult> GetPagedPostsAsync([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
     {
         var validPaginationFiler = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);

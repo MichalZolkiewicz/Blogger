@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Services;
+using Application.Services.Emails;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -14,6 +15,8 @@ public static class DependencyInjection
         services.AddScoped<ICosmosPostService, CosmosPostService>();
         services.AddScoped<IPictureService, PictureService>();
         services.AddScoped<IAttachmentService, AttachmentService>();
+        services.AddTransient<UserResolverService>();
+        services.AddScoped<IEmailSenderService, EmailSenderService>();
 
         return services;
     }
