@@ -1,8 +1,5 @@
 ﻿using Domain.Interfaces;
-using Infrastructure.Data;
-using Infrastructure.Identity;
 using Infrastructure.Repositories;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -15,10 +12,6 @@ public static class DependencyInjection
         services.AddScoped<ICosmosPostRepository, CosmosPostRepository>();
         services.AddScoped<IPictureRepository, PictureRepository>();
         services.AddScoped<IAttachmentRepository, AttachmentRepository>();
-
-        services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<BloggerContext>()
-            .AddDefaultTokenProviders();
 
         return services;
     }

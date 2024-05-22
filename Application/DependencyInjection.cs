@@ -14,9 +14,7 @@ public static class DependencyInjection
         services.AddScoped<IPostService, PostService>();
         services.AddScoped<ICosmosPostService, CosmosPostService>();
         services.AddScoped<IPictureService, PictureService>();
-        services.AddScoped<IAttachmentService, AttachmentService>();
-        services.AddTransient<UserResolverService>();
-        services.AddScoped<IEmailSenderService, EmailSenderService>();
+        services.AddScoped<IAttachmentService, AttachmentService>();        
 
         return services;
     }

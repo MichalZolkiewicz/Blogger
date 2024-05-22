@@ -1,6 +1,5 @@
 ﻿using Application.Dto.Posts;
 using Application.Interfaces;
-using Application.Validators;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,7 @@ namespace WebAPI.Controllers.V1;
 
 [Route("api/{v:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
-//[Authorize(AuthenticationSchemes = "Bearer")]
+[Authorize(AuthenticationSchemes = "Bearer")]
 [ApiController]
 public class PostsController : ControllerBase
 {
@@ -42,6 +41,7 @@ public class PostsController : ControllerBase
 
     [SwaggerOperation(Summary = "Retrieves paged posts")]
     [AllowAnonymous]
+    [Cached(600)]
     [HttpGet]
     public async Task<IActionResult> GetAsync([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
     {
