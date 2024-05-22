@@ -7,14 +7,16 @@ using Xunit;
 
 namespace EndToEndTests.Controllers;
 
-public class PostsControllerTests
+[Collection("Sequential")]
+public class PostsControllerTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _httpClient;
+    private readonly WebApplicationFactory<Program> _factory;
 
-    public PostsControllerTests()
+    public PostsControllerTests(WebApplicationFactory<Program> factory)
     {
-        var webAppFactory = new WebApplicationFactory<Program>();
-        _httpClient = webAppFactory.CreateDefaultClient();
+        _factory = factory;
+        _httpClient = _factory.CreateClient();
     }
 
     [Fact]

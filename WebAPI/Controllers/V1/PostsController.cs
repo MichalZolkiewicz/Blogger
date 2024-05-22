@@ -18,7 +18,7 @@ namespace WebAPI.Controllers.V1;
 
 [Route("api/{v:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
-[Authorize(AuthenticationSchemes = "Bearer")]
+//[Authorize(AuthenticationSchemes = "Bearer")]
 [ApiController]
 public class PostsController : ControllerBase
 {
@@ -43,7 +43,6 @@ public class PostsController : ControllerBase
     [SwaggerOperation(Summary = "Retrieves paged posts")]
     [AllowAnonymous]
     [HttpGet]
-    [Cached(600)]
     public async Task<IActionResult> GetAsync([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
     {
         var validPaginationFiler = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
