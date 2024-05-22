@@ -2,7 +2,6 @@ using Application;
 using Application.Dto.Posts;
 using Application.Interfaces;
 using Application.Services;
-using Application.Services.Emails;
 using Application.Validators;
 using Cosmonaut;
 using Cosmonaut.Extensions.Microsoft.DependencyInjection;
@@ -191,3 +190,5 @@ static IEdmModel GetEdmModel()
 }
 
 app.Run();
+
+public partial class Program { }

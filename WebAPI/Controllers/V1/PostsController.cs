@@ -41,9 +41,10 @@ public class PostsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Retrieves paged posts")]
+    [AllowAnonymous]
     [HttpGet]
     [Cached(600)]
-    public async Task<IActionResult> GetPagedPostsAsync([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
+    public async Task<IActionResult> GetAsync([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
     {
         var validPaginationFiler = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
         var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
