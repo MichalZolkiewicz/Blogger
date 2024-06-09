@@ -15,6 +15,8 @@ public class MvcInstaller : IInstaller
         services.AddApplication();
         services.AddInfrastructure();
 
+        //services.AddMetrics();
+
         services.AddApiVersioning(x =>
         {
             x.DefaultApiVersion = new ApiVersion(1, 0);
